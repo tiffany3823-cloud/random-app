@@ -1,5 +1,4 @@
-import ipywidgets as w, pandas as pd
-from IPython.display import clear_output as c, display as d
+import streamlit as st
 
 D = {
     "힙합": ["바람막이", "카고팬츠", "볼캡", "스니커즈"],
