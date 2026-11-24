@@ -1,21 +1,32 @@
-import random
-import streamlit as st
+import ipywidgets as w, pandas as pd
+from IPython.display import clear_output as c, display as d
 
-# 웹 페이지 기본 설정
-st.set_page_config(page_title="오늘의 점심 메뉴 추천", page_icon="🍽️")
+D = {
+    "힙합": ["바람막이", "카고팬츠", "볼캡", "스니커즈"],
+    "귀여움": ["가디건", "스커트", "니삭스", "메리제인"],
+    "화려함": ["트위드", "슬랙스", "액세서리", "부츠"],
+    "캐주얼": ["데님재킷", "티셔츠", "치노팬츠", "운동화"],
+}
+g, s, st, p, b, o = (
+    w.Dropdown(options=["남", "여"]),
+    w.Dropdown(options=["봄", "여름", "가을", "겨울"]),
+    w.Dropdown(options=list(D)),
+    w.Text(placeholder="목적"),
+    w.Button(description="추천"),
+    w.Output(),
+)
 
-# 제목 및 안내 문구
-st.title("🍽️ 오늘 뭐 먹지? 점심 메뉴 추천")
-st.write("아래 버튼을 누르면 오늘의 점심 메뉴를 랜덤으로 골라드립니다!")
 
-# 1. 점심 메뉴 리스트 작성
-menus = ["짜장면", "마라탕", "제육볶음", "돈까스", "떡볶이", "햄버거", "초밥"]
+def f(x):
+    with o:
+        c()
+        v = p.value
+        sc = 60 if "면접" in v else 100 if v in "데이트페스티벌" else 80
+        print(
+            f"[{g.value}/{s.value}/{st.value}] {sc}점" if v else "목적 입력!"
+        )
+        v and d(pd.DataFrame({"구분": ["상", "하", "잡", "신"], "추천": D[st.value]}))
 
-# 버튼 생성 (버튼을 누르면 True가 반환되어 아래 코드가 실행됨)
-if st.button("🎲 점심 메뉴 추천받기", type="primary"):
-    # 2. 랜덤으로 하나 선택하기
-    selected_menu = random.choice(menus)
-    
-    # 결과 출력 및 축하 효과
-    st.success(f"오늘의 추천 점심 메뉴는 **[{selected_menu}]** 입니다! 맛있게 드세요 😋")
-    st.balloons()
+
+b.on_click(f)
+d(g, s, st, p, b, o)
